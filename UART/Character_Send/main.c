@@ -30,7 +30,7 @@ void uart_init(void)
 		UBRR1L = 8; 
 		//UBRR0L = (uint8_t) (F_CPU / 16/ BAUDRATE)-1;
 		UCSR1A = 0x00;
-		UCSR1B = (1 << RXEN0);//Receiver is being enabled
+		UCSR1B = (1 << RXEN1);//Receiver is being enabled
 		UCSR1C = 0x06;//Transmission size = 8 bit; asynchronous transmission
 }
 
