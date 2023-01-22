@@ -3,6 +3,16 @@
 #include <util/delay.h>
 #include <stdio.h>
 #include <string.h>
+#include <avr/interrupt.h>
+
+//#define sei()
+
+/*
+#define ISR(USART0_UDRE_vect)
+#define ISR(USART2_UDRE_vect)
+#define ISR(USART0_RXC_vect)
+*/
+
 
 #define BAUDRATE  115200L
 uint8_t recv_byte;
@@ -10,10 +20,12 @@ char recv_str[]="";
 char recv_character=' ';
 char transmit_ch=' ';
 
-char send_str[]="AT";
-//uint8_t len=strlen(send_str);
-uint8_t i=0;
-uint8_t len=2;
+//char send_str[]="AT+CWJAP=\"AndroidAP\",\"tan12345\"\r\n";
+char send_str[]="AT\r\n";
+//char send_str[]="AT+CWMODE=1\r\n";
+volatile uint8_t len;
+volatile uint8_t i=0;
+
 
 
 void uart0_init(void)
@@ -31,9 +43,6 @@ void uart0_init(void)
 		UCSR0C = 0x06;//Transmission size = 8 bit; asynchronous transmission
 
 }
-
-
-
 
 void uart2_init(void)
 {
@@ -90,24 +99,34 @@ void uart_send_default(void)// this function is to send NL and CR characters for
 //(for transmitting part):
 ISR(USART0_UDRE_vect)
 {
-	while(i<len)
-	{
-  		UDR0 = send_str[i++];
-	}
+	//lenr=len_calc(send_str);
+	
+  	if(i<len)
+  		{UDR0 = send_str[i++];}
+  	/*else
+  		{i=0;}
+  		*/
+  		
+
+  		
   //Isnt it polling?
 }
+
 ISR(USART2_UDRE_vect)
 {
-  UDR2 = recv_byte;
+  UDR2 = recv_character;
 }
 
-ISR(USART0_RXC_vect)
+
+ISR(USART0_RX_vect)
 {
-	recv_byte = UDR0;
+	//i=0;
+	recv_character = UDR0;
+	//UDR2 = recv_byte;
 	//See if there's a flashing issue if TX and RX are connected
 	//_delay_us(182);
-	recv_character = (char) (recv_byte);
-	strncat(recv_str, &recv_character, 1);
+	//recv_character = (char) (recv_byte);
+	//strncat(recv_str, &recv_character, 1);
 }
 
 int main(void)
@@ -118,9 +137,9 @@ int main(void)
 		//DDRA = 0xFF;//PORTA for output
 		//DDRL = 0xFF;//PORTL for output
 
-	DDRE=0x02; // SET PE1 / TX0 as output
-	DDRD=0x00;// SET PD as input (we need PD2 = RX1)
-
+	//DDRE=0x02; // SET PE1 / TX0 as output
+	//DDRD=0x00;// SET PD as input (we need PD2 = RX1)
+    len=strlen(send_str);
 	uart2_init();
 	uart0_init();
 	//UCSR1A &= 0x7F;
@@ -142,8 +161,8 @@ int main(void)
 	}*/
 	
 	//uart_send_default();
-	transmit_ch=0x0D;
-	transmit_ch=0x0A;
+	//transmit_ch=0x0D;
+	//transmit_ch=0x0A;
 	
 	
 	   
@@ -151,7 +170,7 @@ int main(void)
 	//uart_recv();
 		//uart_send('U');
 
-	__enable_interrupt();
+	sei();
 	while(1);
     return 0;
 }

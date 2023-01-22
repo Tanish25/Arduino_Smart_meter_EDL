@@ -47,11 +47,11 @@ void uart_init(void)
 void uart_send(char transmit_ch)
 {
 	
-	{
-	    UDR0 = transmit_ch;
-	    while(!(UCSR0A & (1<<TXC0)));
+	
+	 UDR0 = transmit_ch;
+	 while(!(UCSR0A & (1<<TXC0)));
 	    //_delay_us(10);
-	}
+	
 
 }
 
@@ -64,24 +64,22 @@ void uart_recv(void)
 	//_delay_us(182);
 	UDR2 = recv_byte;
 	while(!(UCSR2A & (1<<TXC2)));
-	recv_character = (char) (recv_byte);
-	strncat(recv_str, &recv_character, 1);
+	//recv_character = (char) (recv_byte);
+	//strncat(recv_str, &recv_character, 1);
 	}
 
 }
+/*
 void uart_send_default(void)
 {
 	UDR0 = 0x0D;
 	while(!(UCSR0A & (1<<TXC0)));
-	_delay_us(182);//delay configured such that processing time is to be accounted for
+	//_delay_us(182);//delay configured such that processing time is to be accounted for
 	UDR0 = 0x0A;
 	while(!(UCSR0A & (1<<TXC0)));
 	
 }
-void uart_send_default_2(void)
-{
-	
-}
+*/
 int main(void)
 {
 	
@@ -90,13 +88,13 @@ int main(void)
 		//DDRA = 0xFF;//PORTA for output
 		//DDRL = 0xFF;//PORTL for output
 
-	DDRE=0x02; // SET PE1 / TX0 as output
-	DDRD=0x00;// SET PD as input (we need PD2 = RX1)
+	//DDRE=0x02; // SET PE1 / TX0 as output
+	//DDRD=0x00;// SET PD as input (we need PD2 = RX1)
 
 	uart_init();
 	//UCSR1A &= 0x7F;
 
-	char send_str[]="AT";
+	char send_str[]="AT\r\n";
 	uint8_t len=strlen(send_str);
 	uint8_t i=0;
 	
@@ -113,8 +111,9 @@ int main(void)
 	{
 		uart_send(send_str[i++]);
 	}
+	i=0;
 	
-	uart_send_default();
+	//uart_send_default();
 	
 	
 	   
@@ -129,3 +128,6 @@ int main(void)
 //PORT A= 22-29; PORT C = 37-30; PORTL= 42-49
 //TX0: 1
 //RX1: 19
+
+
+//Conclusion: multiple characters not gng
