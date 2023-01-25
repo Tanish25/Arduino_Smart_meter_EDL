@@ -6,10 +6,10 @@
 #include <avr/interrupt.h>
 
 #define BAUDRATE  115200L
-uint8_t recv_byte;
-char recv_str[]="";
-char recv_character=' ';
-char transmit_ch=' ';
+//uint8_t recv_byte;
+volatile char recv_str[100];
+volatile char recv_character;
+//char transmit_ch=' ';
 
 //char send_str[]="AT+CWJAP=\"AndroidAP\",\"tan12345\"\r\n";
 char send_str[]="AT\r\n";
@@ -27,7 +27,7 @@ void uart0_init(void)
 		//UBRR0L = (uint8_t) (F_CPU / 16/ BAUDRATE)-1;
 		UBRR0L = 8;
 		UCSR0A = 0x00;
-		UCSR0B = (1 << TXEN0)|(1 << RXEN0)|(1<<RXCIE0)|(1<<TXCIE0)|(1<<UDRIE0);//Transmitter and receiver being enabled
+		UCSR0B = (1 << RXEN0)|(1<<RXCIE0);//Transmitter and receiver being enabled
 		UCSR0C = 0x06;//Transmission size = 8 bit; asynchronous transmission
 
 }
