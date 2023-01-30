@@ -5,6 +5,7 @@ AT
 AT+CWMODE=1
 
 AT+CWJAP="SSID","PASSWORD"
+"AT+CWJAP=\"AndroidAP\",\"tan12345\"\r\n";
 
 AT+CIPMUX=0
 
