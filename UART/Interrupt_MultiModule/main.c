@@ -44,6 +44,15 @@ void uart3_init(void)
   UCSR3C = 0x06;  
 }
 
+
+//*void send_strings(char,uint8_t,uint8_t)
+{
+   if (i < len) 
+    { 
+    UDR1 = send_str[i++];
+    UCSR1B |= (1 << UDRIE1); 
+   }
+}*/
 ISR(USART1_UDRE_vect)
  {
   //lenr=len_calc(send_str);
