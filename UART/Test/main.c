@@ -10,6 +10,7 @@ char send_str[]="AT\r\n";
 //char send_str[] = "AT+CWMODE=1\r\n";
 char recv_str[100];
 volatile uint8_t len;
+volatile uint8_t len_2;
 volatile uint8_t i = 0;
 volatile uint8_t j = 0;
 
@@ -35,11 +36,11 @@ void uart2_init(void)
 
 void uart3_init(void) 
 {
-	 // configure the third UART module for transmitting the received data
+     // configure the third UART module for transmitting the received data
   
   UBRR3H = 0;  
   UBRR3L = 8;               // for 115200 baud rate with F_CPU = 16000000
-  UCSR3B |=(1 << TXEN3);
+  UCSR3B |=(1 << TXEN3)|(1 << UDRIE3);
   UCSR3A = 0x00;
   UCSR3C = 0x06;  
 }
@@ -49,7 +50,7 @@ ISR(USART1_UDRE_vect)
 {
   if (i < len) 
   { 
-  	UDR1 = send_str[i++];
+    UDR1 = send_str[i++];
   }
 }
 
@@ -57,19 +58,24 @@ ISR(USART2_RX_vect)
 {
   recv_byte = UDR2;
   recv_str[j++] = recv_byte; 
-  UDR3 = recv_byte;  
+  //UDR3 = recv_byte;  
 }
-
+ISR(USART3_UDRE_vect)
+{
+  if (j < len_2)//remove this if also and check 
+  { 
+    UDR3 = recv_str[j++];
+  }
+}
 
 int main(void) 
 {
-	
+    
   uart1_init();
   uart2_init();
   uart3_init();
-  DDRL=0xFF;
-  PORTL=UDR2;
   len=strlen(send_str);
+  len_2=strlen(recv_str);
   sei();  // enable global interrupts
   while(1);
   return 0;

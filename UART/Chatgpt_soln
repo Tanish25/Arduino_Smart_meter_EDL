@@ -1,0 +1,82 @@
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+#define BAUD 115200
+#define UBRR_VAL (F_CPU / 16 / BAUD - 1)
+
+// buffer for storing received string
+char rx_buffer[100];
+uint8_t rx_index = 0;
+
+// flag to indicate that a string has been received
+uint8_t rx_flag = 0;
+
+// buffer for storing string to be transmitted
+char tx_buffer[100];
+uint8_t tx_index = 0;
+
+// flag to indicate that the transmission is in progress
+uint8_t tx_flag = 0;
+
+void uart_init() {
+    // set baud rate
+    UBRR0H = (uint8_t)(UBRR_VAL >> 8);
+    UBRR0L = (uint8_t)UBRR_VAL;
+
+    // set frame format: 8 data bits, 1 stop bit, no parity
+    UCSR0C = (1 << UCSZ01) | (1 << UCSZ00);
+
+    // enable receiver and transmitter
+    UCSR0B = (1 << RXEN0) | (1 << TXEN0);
+
+    // enable receive complete interrupt
+    UCSR0B |= (1 << RXCIE0);
+}
+
+ISR(USART0_RX_vect) {
+    // read the received data
+    char data = UDR0;
+
+    // store the data in the buffer
+    rx_buffer[rx_index] = data;
+    rx_index++;
+
+    // check for null character or maximum buffer size
+    if (data == '\0' || rx_index >= sizeof(rx_buffer)) {
+        // set the flag to indicate that the string has been received
+        rx_flag = 1;
+
+        // reset the buffer index
+        rx_index = 0;
+    }
+}
+
+ISR(USART0_TX_vect) {
+    // check if there is more data to be transmitted
+    if (tx_index < sizeof(tx_buffer)) {
+        // transmit the next data
+        UDR0 = tx_buffer[tx_index];
+        tx_index++;
+    } else {
+        // clear the flag to indicate that the transmission is complete
+        tx_flag = 0;
+
+        // reset the buffer index
+        tx_index = 0;
+    }
+}
+
+void uart_puts(char *str) {
+    // copy the string to the transmit buffer
+    strcpy(tx_buffer, str);
+
+    // set the flag to indicate that the transmission is in progress
+    tx_flag = 1;
+
+    // enable the transmit complete interrupt
+    UCSR0B |= (1 << TXCIE0);
+
+    // start the transmission
+    UDR0 = tx_buffer[tx_index];
+    tx_index++;
+}
