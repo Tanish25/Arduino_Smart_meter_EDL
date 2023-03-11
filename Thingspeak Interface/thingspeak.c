@@ -59,13 +59,12 @@ void wifi_connect(char* ssid, char* password) {
     send_at_command((char*)commands[i], response);
     _delay_ms(2000);
     // check response and retry if needed
-    if(!(response[0]=='A' & response[1]=='T' ))
-      i--;
+    if(!(response[0]=='A' && response[1]=='T' )){
+      uart_send_string(response[0]);
+      i--;}
+    }
 
 
-  }
-
-  send_at_command("AT+RST\r\n",response);
   // send command to connect to Wi-Fi network
 }
 
