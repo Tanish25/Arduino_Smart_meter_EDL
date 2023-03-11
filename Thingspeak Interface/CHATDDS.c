@@ -41,28 +41,21 @@ void readResponse(char* response) {
 void sendATCommand(char* command) {
   char response[256];  // assuming max response size is 255 characters
   sendString(command);
-  readResponse(response);
-  if(response[0]=='A')
-    sendString("sdfsad");
+ 
   // process the response as needed
 }
 
 // Function to connect to Wi-Fi network using ESP8266
 void connectToWifi(char* ssid, char* password) {
+char *string[]={"AT+RST\r\n","AT+CWMODE=1\r\n"}
+for(uint8_t i=0;i<8;i++)
+{
+  sendATCommand(string[i]);
+  readResponse(response);
+  if(!(response[0]=='A'&response[1]=='T'))
+    i--;
+}
 
-  char cmd[64];
-  sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", ssid, password);  // construct command string
-  sendATCommand(cmd);                                          // connect to Wi-Fi network
-
-  _delay_ms(2000);
-
-  sendATCommand("AT+RST\r\n");  // reset ESP8266
-
-  _delay_ms(4000);
-  _delay_ms(4000);
-  _delay_ms(4000);
-
-  sendATCommand("AT+CWMODE=1\r\n");  // set to station mode
 }
 
 int main() {
