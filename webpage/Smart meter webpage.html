@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Smart Meter</title>
+</head>
+
+<body>
+  <h1 align="center" style="color:#7b00ff;">Smart Meter</h1>
+  <div style="display:flex; justify-content:center;">
+    <div class="toggle-button-cover">
+      <div class="button-cover">
+        <div class="button r" id="slider">
+          <input type="checkbox" id="push-slider" class="checkbox" offclick="startTimer(this)" onclick="startTimer(this)">
+          <div class="knobs">
+            <span></span>
+          </div>
+          <div class="layer"></div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div id="timer" class="timer" style="text-align: right;">Wait for <span id="countdown"></span>s seconds to change your input.</div>
+      </div>
+    </div>
+    <div id="response"></div>
+  </div>
+
+  <script>
+    function startTimer(elem) {
+      elem.disabled = true;
+      var countdownElem = document.getElementById("countdown");
+      var timeLeft = 15;
+      var timer = setInterval(function () {
+        timeLeft--;
+        countdownElem.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          elem.disabled = false;
+          countdownElem.textContent = "14";
+          document.getElementById("timer").style.display = "none";
+        }
+      }, 1000);
+      document.getElementById("timer").style.display = "block";
+    }
+  </script>
+
+
+  <script>
+    function getData() {
+      fetch("https://api.thingspeak.com/channels/2053966/fields/4.json?results=1", {
+        method: "GET",
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Get the value of field1
+          const field1Value = data.feeds[0].field4;
+
+
+          // Turn on/off the slide button based on the value of field1
+          if (field1Value === "1") {
+            document.getElementById("push-slider").checked = true;
+          } else {
+            document.getElementById("push-slider").checked = false;
+          }
+        });
+
+    }
+  </script>
+
+
+  <body onload="getData()">
+    
+
+
+    <script>
+      document.getElementById("push-slider").addEventListener("click", function () {
+        if (this.checked) {
+          fetch("https://api.thingspeak.com/update?api_key=JGMS30H5A71UCKZ1&field4=1", {
+            method: "GET"
+          })
+
+            .catch(error => {
+              console.error(error);
+            });
+        } else {
+          fetch("https://api.thingspeak.com/update?api_key=JGMS30H5A71UCKZ1&field4=0", {
+            method: "GET"
+          })
+        }
+      });
+    </script>
+    <style>
+      .timer {
+        font-size: 20px;
+        margin-top: 10px;
+        display: none;
+      }
+
+      /* CSS rules are kept repetitive so that you can get CSS rules for each button easily :) */
+
+      * {
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      *:focus {
+        outline: none;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        background-color: #f1f9f9;
+      }
+
+
+      .toggle-button-cover {
+        display: table-cell;
+        position: relative;
+        width: 450px;
+        height: 140px;
+        box-sizing: border-box;
+      }
+
+      .button-cover {
+        height: 80px;
+        margin: 15px;
+        background-color: #96a7a7;
+        box-shadow: 0 10px 20px -8px #c5d6d6;
+        border-radius: 20px;
+      }
+
+      .button-cover:before {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        color: #d7e3e3;
+        font-size: 12px;
+        line-height: 1;
+        padding: 5px;
+      }
+
+      .button-cover,
+      .knobs,
+      .layer {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      .button {
+        position: relative;
+        top: 50%;
+        width: 74px;
+        height: 36px;
+        margin: -20px auto 0 auto;
+        overflow: hidden;
+      }
+
+      .button.r,
+      .button.r .layer {
+        border-radius: 100px;
+      }
+
+      .button.b2 {
+        border-radius: 2px;
+      }
+
+      .checkbox {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        opacity: 0;
+        cursor: pointer  ;
+        z-index: 3;
+      }
+
+      .knobs {
+        z-index: 2;
+      }
+
+      .layer {
+        width: 100%;
+        background-color: #f3dede;
+        transition: 0.3s ease all;
+        z-index: 1;
+      }
+
+
+
+
+
+      #slider .knobs:before,
+      #slider .knobs:after,
+      #slider .knobs span {
+        position: absolute;
+        top: 4px;
+        width: 20px;
+        height: 10px;
+        font-size: 10px;
+        font-weight: bold;
+        text-align: center;
+        line-height: 1;
+        padding: 9px 4px;
+        border-radius: 50%;
+        transition: 0.7s cubic-bezier(0.18, 0.89, 0.35, 1.15) all;
+      }
+
+      #slider .knobs:before {
+        content: "OFF";
+        left: 4px;
+      }
+
+      #slider .knobs:after {
+        content: "ON";
+        right: -24px;
+      }
+
+      #slider .knobs:before,
+      #slider .knobs:after {
+        color: #fff;
+        z-index: 2;
+      }
+
+      #slider .knobs span {
+        left: 4px;
+        background-color: #f40303;
+        z-index: 1;
+      }
+
+      #slider .checkbox:checked+.knobs:before {
+        left: -24px;
+      }
+
+      #slider .checkbox:checked+.knobs:after {
+        right: 4px;
+      }
+
+      #slider .checkbox:checked+.knobs span {
+        left: 42px;
+        background-color: #269809;
+      }
+
+      #slider .checkbox:checked~.layer {
+        background-color: #def9e2;
+      }
+    </style>
+  </body>
+
+
+
+
+
+
+    <table align="center">
+      <tr>
+        <td colspan="2">
+          <h2 align="center" color="#00FFFF">Data Collection Dashboard</h2>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <iframe width="450" height="260" style="border: 1px solid #cccccc;"
+            src="https://thingspeak.com/channels/2053966/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+        </td>
+        <td>
+          <iframe width="450" height="260" style="border: 1px solid #cccccc;"
+            src="https://thingspeak.com/channels/2053966/charts/2?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <iframe width="450" height="260" style="border: 1px solid #cccccc;"
+            src="https://thingspeak.com/channels/2053966/charts/3?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+        </td>
+        <td>
+          <iframe width="450" height="260" style="border: 1px solid #cccccc;"
+            src="https://thingspeak.com/channels/2053966/charts/4?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+
+</html>
