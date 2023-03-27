@@ -85,6 +85,11 @@ void adc_init()
   ADMUX |= (1 << ADLAR);    // left aligned, better for 8 bit resolution
   //ADMUX |= ((0 << MUX4)|(0 << MUX0)|(0 << MUX1)|(0 << MUX2)|(0 << MUX3));   
    //ADCSRA |= (1 << ADSC); //to start conversion
+
+    // Set the ADC auto trigger source to Timer/Counter1 Compare Match A
+  ADCSRA |= (1 << ADATE);
+  ADCSRB &= ~(1 << ADTS2) & ~(1 << ADTS1) & ~(1 << ADTS0);
+  ADCSRB |= (1 << ADTS1) | (1 << ADTS0);
   
 }
 
@@ -163,11 +168,28 @@ void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power )
   _delay_ms(1000);
 
   uart_send_string("AT+CIPCLOSE=5\r\n");  
-  _delay_ms(4000);
-  _delay_ms(4000);
-  _delay_ms(4000);
-  _delay_ms(2500);
+  // _delay_ms(4000);
+  // _delay_ms(4000);
+  // _delay_ms(4000);
+  // _delay_ms(2500);
 
+}
+
+void pwm_setup()
+{
+    // Set Timer/Counter1 to Fast PWM mode
+  TCCR1A |= (1 << WGM11) | (1 << WGM10);
+  TCCR1B |= (1 << WGM13) | (1 << WGM12);
+  
+  // Set the prescaler to 8
+  TCCR1B |= (1 << CS11);
+  
+  // Set the TOP value to 0x3FFF
+  ICR1 = 0x3FFF;
+  
+  // Set the duty cycle to 50%
+  OCR1A = 0x1FFF;
+  //frequency:?
 }
 
 int main()
@@ -178,7 +200,8 @@ int main()
     DDRC = 0xFF;//port C direction: output //pins- 37:30
     DDRA = 0xFF;//port A direction: output //pins- 22:29
     DDRG = 0xFF;//port G direction: output //pins- 41://PG0-41: PG2-39
-
+     
+     pwm_setup();
     //sampling frequency generator:
     // OCR0A= 0x7F;//50 percent of 255=duty cycle//decimal=127
     // TCCR0A = 0x83;
@@ -232,7 +255,10 @@ int main()
       ADMUX &= ~(1 << MUX0); // Select ADC0 for conversion
     } else {
       ADMUX |= (1 << MUX0); // Select ADC1 for conversion
-    }   ADCSRA |= (1 << ADSC); // Start conversion
+    }   
+
+     
+    //ADCSRA |= (1 << ADSC); // Start conversion
     while (ADCSRA & (1 << ADSC)); // Wait for conversion to complete 
       if(f%4<2)
       {
@@ -280,7 +306,7 @@ int main()
                  i_count++;
                  poww[pow_count]=ADC_Value_Avg_Current*ADC_Value_Avg_Voltage;
                  pow_count++;
-        Send_to_thingspeak(ADC_Value_Avg_Voltage,ADC_Value_Avg_Current,poww);
+        //Send_to_thingspeak(ADC_Value_Avg_Voltage,ADC_Value_Avg_Current,poww[pow_count]);
        
         }
         if(f==15)
