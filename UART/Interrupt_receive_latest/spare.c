@@ -1,26 +1,24 @@
+
 #include <avr/io.h>
-#define F_CPU 16000000  //16MHz
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <ArduinoYaml.h>
-
 
 #define DEFAULT_BUFFER_SIZE 160
 #define API_KEY "JGMS30H5A71UCKZ1"
-#define SSID "AndroidAP"
-#define PASSWORD "tan12345"
+#define SSID "Pixel-5"
+#define PASSWORD "cabhinav"
 
 
 volatile char received_string[50];
 volatile uint8_t string_index = 0;
 
 
-;
 
-ISR(USART1_RX_vect)
+
+ISR(USART1_RXC_vect)
 {
     char received_char = UDR1;
     
@@ -117,27 +115,26 @@ int main() {
   uart1_init();
 
   // Connect to Wi-Fi
-  wifi_connect();
+  //wifi_connect();
 
   //memset(received_string, 0, sizeof(received_string));  buuffer clear
-  
+  uart_send_string("AT\r\n");
   while(1){
-  sei();
-  Read_from_thingspeak();
-  cli();
-  cJSON *root = cJSON_Parse(received_string);
-  cJSON *name = cJSON_GetObjectItem(root, "field4");
-  char *name_value = cJSON_GetStringValue(name);
-  cJSON_Delete(root);
-
-  uart_send_string(name_value);
+    if(strstr(received_string,"AT"))
+    {
+        uart_send_string("Done");
+    }
+    else
+        break;
+  }
+  
 
   
   
 
     
 
-  }
+
 
 
 }

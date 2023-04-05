@@ -29,8 +29,9 @@ void uart1_init()
 
 void relay_init(void){
 
-    DDRC = 0x01; 
-    PORTC = 0x01;
+    DDRC = 0xFF; 
+    PORTC = 0xFF;
+    
 }
 
 void relay_toggle(uint8_t status){
@@ -91,82 +92,55 @@ void uart_send_string(char *str)
   }
 }
 
-// void wifi_connect(void)
-// {
-//   char cmd[64];
-
-//   // Construct Wi-Fi connection command with SSID and password
-//   sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
-
-//   char response_buffer[50];
-// // Send AT to ESP
-// sendAT:
-//   uart_send_string("AT\r\n");
-//   _delay_ms(1000);
-//   strcpy(response_buffer, rx_buffer);
-//   rx_index = 0;
-
-//   // Set Wi-Fi mode to station mode
-//   if (strstr(response_buffer, "OK"))
-//   {
-//   sendCWMODE:
-//     uart_send_string("AT+CWMODE=1\r\n");
-//   }
-//   else
-//     goto sendAT;
-
-//   _delay_ms(500);
-//   strcpy(response_buffer, rx_buffer);
-//   rx_index = 0;
-
-//   // Connect to Wi-Fi network with SSID and password
-//   if (strstr(response_buffer, "OK"))
-//   {
-//   sendCIPMUX:
-//     uart_send_string(cmd);
-//   }
-//   else
-//     goto sendCWMODE;
-
-//   _delay_ms(2000);
-//   strcpy(response_buffer, rx_buffer);
-//   rx_index = 0;
-
-//   // Connect to Wi-Fi network with SSID and password
-//   if (strstr(response_buffer, "WIFI"))
-//   {
-//     uart_send_string("AT+CIPMUX=1\r\n");
-//   }
-//   else
-//     goto sendCIPMUX;
-
-// }
-
 void wifi_connect(void)
 {
-    char cmd[64];
+  char cmd[64];
 
-    // Construct Wi-Fi connection command with SSID and password
-    sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
+  // Construct Wi-Fi connection command with SSID and password
+  sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
 
-    // Send AT command
-    uart_send_string("AT\r\n");
-    _delay_ms(50);
-    // uart_send_string(RESPONSE_BUFFER);
+  char response_buffer[50];
+// Send AT to ESP
+sendAT:
+  uart_send_string("AT\r\n");
+  _delay_ms(1000);
+  strcpy(response_buffer, rx_buffer);
+  rx_index = 0;
 
-    // // Set Wi-Fi mode to station mode
-     uart_send_string("AT+CWMODE=1\r\n");
-     _delay_ms(50);
+  // Set Wi-Fi mode to station mode
+  if (strstr(response_buffer, "OK"))
+  {
+  sendCWMODE:
+    uart_send_string("AT+CWMODE=1\r\n");
+  }
+  else
+    goto sendAT;
 
+  _delay_ms(500);
+  strcpy(response_buffer, rx_buffer);
+  rx_index = 0;
 
-    // // Connect to Wi-Fi network with SSID and password
-     uart_send_string(cmd);
-     _delay_ms(8000);
+  // Connect to Wi-Fi network with SSID and password
+  if (strstr(response_buffer, "OK"))
+  {
+  sendCIPMUX:
+    uart_send_string(cmd);
+  }
+  else
+    goto sendCWMODE;
 
-     uart_send_string("AT+CIPMUX=1\r\n");
-     _delay_ms(50);
+  _delay_ms(2000);
+  strcpy(response_buffer, rx_buffer);
+  rx_index = 0;
+
+  // Connect to Wi-Fi network with SSID and password
+  while (strstr(response_buffer, "CONNECTED"))
+  {
+    uart_send_string("AT+CIPMUX=1\r\n");
+     _delay_ms(2000);
+  }
+
 }
-
 
 void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power )
 {
@@ -209,19 +183,43 @@ char Read_from_thingspeak(void)
 
   sprintf(len_string, "AT+CIPSEND=4,%d\r\n", len);
   uart_send_string(len_string);
-  _delay_ms(100);
+  _delay_ms(1000);
 
   uart_send_string(Get_string);
-  _delay_ms(2000);
+  _delay_ms(3000);
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
 
   uart_send_string("AT+CIPCLOSE=5\r\n");
-
+  _delay_ms(1000);
   return response_buffer;
 }
 
+void wifi_connect(void)
+{
+    char cmd[64];
+
+    // Construct Wi-Fi connection command with SSID and password
+    sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
+
+    // Send AT command
+    uart_send_string("AT\r\n");
+    _delay_ms(50);
+    // uart_send_string(RESPONSE_BUFFER);
+
+    // // Set Wi-Fi mode to station mode
+     uart_send_string("AT+CWMODE=1\r\n");
+     _delay_ms(50);
+
+
+    // // Connect to Wi-Fi network with SSID and password
+     uart_send_string(cmd);
+     _delay_ms(8000);
+
+     uart_send_string("AT+CIPMUX=1\r\n");
+     _delay_ms(50);
+}
 
 float calc_rms_voltage()
 {
@@ -246,14 +244,13 @@ int main()
 
   // Connect to Wi-Fi
   wifi_connect();
-  relay_toggle(1);
-  // while(1){
-  // //Send_to_thingspeak(calc_rms_voltage(),0,0);
-  // if (Read_from_thingspeak())
-  //   relay_toggle(1);
-  // else if (Read_from_thingspeak() == '0')
-  //   relay_toggle(0);};
-  cli();
+  while(1){
+  //Send_to_thingspeak(calc_rms_voltage(),0,0);
+  if (Read_from_thingspeak()=='1')
+    relay_toggle(1);
+  else if (Read_from_thingspeak() == '0')
+    relay_toggle(0);
+    }
   return 0;
 
 }

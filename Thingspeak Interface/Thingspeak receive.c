@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <ArduinoYaml.h>
-
+#include <ThingSpeak.h>
 
 #define DEFAULT_BUFFER_SIZE 160
 #define API_KEY "JGMS30H5A71UCKZ1"
@@ -122,14 +121,7 @@ int main() {
   //memset(received_string, 0, sizeof(received_string));  buuffer clear
   
   while(1){
-  sei();
-  Read_from_thingspeak();
-  cli();
-  cJSON *root = cJSON_Parse(received_string);
-  cJSON *name = cJSON_GetObjectItem(root, "field4");
-  char *name_value = cJSON_GetStringValue(name);
-  cJSON_Delete(root);
-
+  uint8_t temp = ThingSpeak.readLongField(counterChannelNumber, FieldNumber1, 2H5PKJ4GI6TMRSS6);
   uart_send_string(name_value);
 
   
