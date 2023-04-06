@@ -68,152 +68,36 @@ void uart1_init()
                                       );
 }
 
-void relay_init(void){
-
-    
-# 32 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-   (*(volatile uint8_t *)((0x07) + 0x20)) 
-# 32 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-        = 0xFF;
-    
-# 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-   (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-         = 0xFF;
-
-}
-
-void relay_toggle(uint8_t status){
-
-if(status==1)
-
-# 40 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)((0x08) + 0x20)) 
-# 40 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-     = 0x01;
-else if(status==0)
-
-# 42 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)((0x08) + 0x20)) 
-# 42 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-     = 0x00;
-}
-
-uint8_t adc_read(void)
+void relay_init(void)
 {
-// Select differential input mode
 
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7C)) 
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-     |= (1 << 
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-              3
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                  ) | (1 << 
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-                            2
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                                ) | (1 << 
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-                                          1
-# 48 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                                              ); // Select ADC1 (A0) as positive input
+  
+# 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+ (*(volatile uint8_t *)((0x07) + 0x20)) 
+# 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+      = 0xFF;
+  
+# 34 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+ (*(volatile uint8_t *)((0x08) + 0x20)) 
+# 34 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+       = 0xFF;
+}
 
-# 49 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7B)) 
-# 49 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-      |= (1 << 
-# 49 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-               3
-# 49 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                   ); // Select ADC0 (A1) as negative input
+void relay_toggle(uint8_t status)
+{
 
-// Set ADC reference voltage
-
-# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7C)) 
-# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-     |= (1 << 
-# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-              7
-# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                   ) | (1 << 
-# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-                             6
-# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                                  ); // Use internal 5V as reference voltage
-
-
-# 54 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7C)) 
-# 54 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-     |= (1 << 
-# 54 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-              5
-# 54 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                   ); // left aligned, better for 8 bit resolution
-
-// Set ADC clock frequency
-
-# 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7A)) 
-# 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-      |= (1 << 
-# 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-               2
-# 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                    ) | (1 << 
-# 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-                              0
-# 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                                   ); // Set prescaler to 32 for 5 kHz sampling frequency
-
-// Enable ADC
-
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7A)) 
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-      |= (1 << 
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-               7
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                   );
-
-// Start ADC conversion
-
-# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-(*(volatile uint8_t *)(0x7A)) 
-# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-      |= (1 << 
-# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-               6
-# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                   );
-
-// Wait for conversion to complete
-while (
-# 66 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-      (*(volatile uint8_t *)(0x7A)) 
-# 66 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-             & (1 << 
-# 66 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-                     6
-# 66 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                         ));
-
-// Get ADC value
-uint8_t adc_value = 
-# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
-                   (*(volatile uint16_t *)(0x78))
-# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-                      ;
-
-// Calculate differential value
-uint8_t differential_value = (uint8_t)adc_value - 512;
-
-// Return differential value
-return differential_value;
+  if (status == 1)
+    
+# 41 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+   (*(volatile uint8_t *)((0x08) + 0x20)) 
+# 41 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+         = 0x01;
+  else if (status == 0)
+    
+# 43 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+   (*(volatile uint8_t *)((0x08) + 0x20)) 
+# 43 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+         = 0x00;
 }
 
 
@@ -223,21 +107,21 @@ void uart_send_string(char *str)
   {
     // Wait for the transmit buffer to be empty
     while (!(
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
             (*(volatile uint8_t *)(0xC8)) 
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
                    & (1 << 
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
                            5
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+# 52 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
                                 )))
       ;
 
     // Send the next character
     
-# 88 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+# 56 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
    (*(volatile uint8_t *)(0XCE)) 
-# 88 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+# 56 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
         = *str;
 
     // Move to the next character in the string
@@ -282,45 +166,43 @@ sendAT:
   else
     goto sendCWMODE;
 
-  _delay_ms(2000);
+  _delay_ms(7000);
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
   // Connect to Wi-Fi network with SSID and password
-  while (strstr(response_buffer, "CONNECTED"))
+  if (strstr(response_buffer, "WIFI"))
   {
     uart_send_string("AT+CIPMUX=1\r\n");
-     _delay_ms(2000);
+     _delay_ms(4000);
   }
 
 }
 
-void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power )
+void Send_to_thingspeak(uint16_t Voltage, uint16_t Current, uint16_t Power)
 {
   char Get_string[128];
   char len_string[128];
   uint8_t len;
-  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n","JGMS30H5A71UCKZ1",Voltage,Current,Power);
-  len=strlen(Get_string);
+  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n", "JGMS30H5A71UCKZ1", Voltage, Current, Power);
+  len = strlen(Get_string);
 
   uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
   _delay_ms(4000);
 
-  sprintf(len_string,"AT+CIPSEND=4,%d\r\n",len);
+  sprintf(len_string, "AT+CIPSEND=4,%d\r\n", len);
   uart_send_string(len_string);
-  _delay_ms(1000);
+  _delay_ms(2000);
 
   uart_send_string(Get_string);
-  _delay_ms(1000);
+  _delay_ms(4000);
 
   uart_send_string("AT+CIPCLOSE=5\r\n");
   _delay_ms(4000);
   _delay_ms(4000);
   _delay_ms(4000);
   _delay_ms(2500);
-
 }
-
 
 char Read_from_thingspeak(void)
 {
@@ -343,71 +225,58 @@ char Read_from_thingspeak(void)
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
-
   uart_send_string("AT+CIPCLOSE=5\r\n");
   _delay_ms(1000);
   return response_buffer;
 }
 
-void wifi_connect(void)
-{
-    char cmd[64];
+// void wifi_connect(void)
+// {
+//   char cmd[64];
 
-    // Construct Wi-Fi connection command with SSID and password
-    sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", "Pixel-5", "cabhinav");
+//   // Construct Wi-Fi connection command with SSID and password
+//   sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
 
-    // Send AT command
-    uart_send_string("AT\r\n");
-    _delay_ms(50);
-    // uart_send_string(RESPONSE_BUFFER);
+//   // Send AT command
+//   uart_send_string("AT\r\n");
+//   _delay_ms(50);
+//   // uart_send_string(RESPONSE_BUFFER);
 
-    // // Set Wi-Fi mode to station mode
-     uart_send_string("AT+CWMODE=1\r\n");
-     _delay_ms(50);
+//   // // Set Wi-Fi mode to station mode
+//   uart_send_string("AT+CWMODE=1\r\n");
+//   _delay_ms(50);
 
+//   // // Connect to Wi-Fi network with SSID and password
+//   uart_send_string(cmd);
+//   _delay_ms(8000);
 
-    // // Connect to Wi-Fi network with SSID and password
-     uart_send_string(cmd);
-     _delay_ms(8000);
-
-     uart_send_string("AT+CIPMUX=1\r\n");
-     _delay_ms(50);
-}
-
-float calc_rms_voltage()
-{
-    uint32_t sum = 0;
-    float rms_voltage = 0;
-    uint16_t adc_value;
-    for (int i = 0; i < 256; i++) {
-        adc_value = adc_read();
-        sum += adc_value * adc_value;
-        _delay_us(10);
-    }
-    rms_voltage = sqrt(sum / 256.0);
-    return rms_voltage;
-}
+//   uart_send_string("AT+CIPMUX=1\r\n");
+//   _delay_ms(50);
+// }
 
 int main()
 {
 
-  
-# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
- __asm__ __volatile__ ("sei" ::: "memory")
-# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-      ;
   uart1_init();
   relay_init();
-
+  
+# 193 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino" 3
+ __asm__ __volatile__ ("sei" ::: "memory")
+# 193 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+      ;
   // Connect to Wi-Fi
   wifi_connect();
-  while(1){
-  //Send_to_thingspeak(calc_rms_voltage(),0,0);
-  if (Read_from_thingspeak()=='1')
-    relay_toggle(1);
-  else if (Read_from_thingspeak() == '0')
-    relay_toggle(0);
-    }
-  return 0;
 
+
+
+  if (Read_from_thingspeak() == '1')
+  {
+    uart_send_string("turned on");
+  }
+  else if (Read_from_thingspeak() == '0')
+  {
+    uart_send_string("turned off");
+  }
+
+  return 0;
 }

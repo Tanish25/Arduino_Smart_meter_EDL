@@ -1,0 +1,18 @@
+#line 1 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\.vscode\\c_cpp_properties.json"
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compileCommands": "${workspaceFolder}/Build/compile_commands.json"
+        }
+    ],
+    "version": 4
+}

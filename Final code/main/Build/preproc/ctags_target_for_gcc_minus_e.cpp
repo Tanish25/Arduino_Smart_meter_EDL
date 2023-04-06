@@ -68,58 +68,27 @@ void uart1_init()
                                       );
 }
 
-void relay_init(void){
-
-    
-# 32 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
-   (*(volatile uint8_t *)((0x07) + 0x20)) 
-# 32 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-        = 0x01;
-    
-# 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
-   (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-         = 0x01;
-}
-
-void relay_toggle(uint8_t status){
-
-if(status==1)
-
-# 39 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
-(*(volatile uint8_t *)((0x08) + 0x20)) 
-# 39 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-     = 0x01;
-else if(status==0)
-
-# 41 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
-(*(volatile uint8_t *)((0x08) + 0x20)) 
-# 41 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-     = 0x00;
-}
-
-
 void uart_send_string(char *str)
 {
   while (*str != '\0')
   {
     // Wait for the transmit buffer to be empty
     while (!(
-# 50 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
+# 35 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
             (*(volatile uint8_t *)(0xC8)) 
-# 50 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+# 35 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
                    & (1 << 
-# 50 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
+# 35 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
                            5
-# 50 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+# 35 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
                                 )))
       ;
 
     // Send the next character
     
-# 54 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
+# 39 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
    (*(volatile uint8_t *)(0XCE)) 
-# 54 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+# 39 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
         = *str;
 
     // Move to the next character in the string
@@ -164,7 +133,7 @@ sendAT:
   else
     goto sendCWMODE;
 
-  _delay_ms(2000);
+  _delay_ms(10000);
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
@@ -178,21 +147,39 @@ sendAT:
 
 }
 
-
-
-
-char* Read_from_thingspeak(void)
+void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power )
 {
   char Get_string[128];
   char len_string[128];
-  char response_buffer[50];
-  
-# 120 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
- __asm__ __volatile__ ("sei" ::: "memory")
-# 120 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-      ;
   uint8_t len;
-  sprintf(Get_string, "GET https://api.thingspeak.com/channels/2053966/fields/4/last.txt\r\n");
+  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n","JGMS30H5A71UCKZ1",Voltage,Current,Power);
+  len=strlen(Get_string);
+
+  uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
+  _delay_ms(4000);
+
+  sprintf(len_string,"AT+CIPSEND=4,%d\r\n",len);
+  uart_send_string(len_string);
+  _delay_ms(1000);
+
+  uart_send_string(Get_string);
+  _delay_ms(1000);
+
+  uart_send_string("AT+CIPCLOSE=5\r\n");
+  _delay_ms(4000);
+  _delay_ms(4000);
+  _delay_ms(4000);
+  _delay_ms(2500);
+
+}
+
+
+void Read_from_thingspeak(void)
+{
+  char Get_string[128];
+  char len_string[128];
+  uint8_t len;
+  sprintf(Get_string, "GET https://api.thingspeak.com/channels/2053966/fields/4.json?results=1");
   len = strlen(Get_string);
 
   uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
@@ -200,25 +187,14 @@ char* Read_from_thingspeak(void)
 
   sprintf(len_string, "AT+CIPSEND=4,%d\r\n", len);
   uart_send_string(len_string);
-  _delay_ms(100);
+  _delay_ms(1000);
 
   uart_send_string(Get_string);
-  _delay_ms(3000);
-  
-# 134 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
- __asm__ __volatile__ ("cli" ::: "memory")
-# 134 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-      ;
-  strcpy(response_buffer, rx_buffer);
-  rx_index = 0;
-
+  _delay_ms(1000);
 
   uart_send_string("AT+CIPCLOSE=5\r\n");
-
-  return response_buffer;
+  _delay_ms(4000);
 }
-
-
 
 int main()
 {
@@ -229,25 +205,30 @@ int main()
 # 149 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
       ;
   uart1_init();
-  relay_init();
 
   // Connect to Wi-Fi
   wifi_connect();
+  Send_to_thingspeak(5,55,55);
+
   
-# 155 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
+# 156 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
  __asm__ __volatile__ ("cli" ::: "memory")
-# 155 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-      ;
-  while(1){
-  if (Read_from_thingspeak())
-    relay_toggle(1);
-  else if (Read_from_thingspeak() == '0')
-    relay_toggle(0);};
-  
-# 161 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino" 3
- __asm__ __volatile__ ("cli" ::: "memory")
-# 161 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+# 156 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
       ;
   return 0;
 
+  // char response_buffer[50];
+  //   uart_send_string("AT\r\n");
+  //   _delay_ms(500);
+  //   strcpy(response_buffer, rx_buffer);
+  //   rx_index = 0;
+
+  //   if(strstr(response_buffer,"OK"))
+  //   {
+  //       uart_send_string("Done_out");
+  //   }
+  //   else
+  //       uart_send_string("not received_out");
+
+  // memset(received_string, 0, sizeof(received_string));  buuffer clear
 }

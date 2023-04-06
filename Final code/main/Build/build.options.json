@@ -1,5 +1,5 @@
 {
-  "additionalFiles": "..\\..\\..",
+  "additionalFiles": "",
   "builtInToolsFolders": "",
   "compiler.optimization_flags": "",
   "customBuildProperties": "",
@@ -7,5 +7,5 @@
   "hardwareFolders": "C:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages",
   "otherLibrariesFolders": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries",
   "runtime.ide.version": "10607",
-  "sketchLocation": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main"
+  "sketchLocation": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main"
 }

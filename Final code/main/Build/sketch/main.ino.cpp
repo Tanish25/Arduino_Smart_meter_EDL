@@ -1,3 +1,5 @@
+#include <Arduino.h>
+#line 1 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
@@ -14,6 +16,19 @@
 volatile char rx_buffer[50];
 volatile uint8_t rx_index = 0;
 
+#line 23 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+void uart1_init();
+#line 30 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+void uart_send_string(char *str);
+#line 46 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+void wifi_connect(void);
+#line 97 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power );
+#line 124 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+void Read_from_thingspeak(void);
+#line 146 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+int main();
+#line 17 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 ISR(USART1_RX_vect)
 {
   char received_byte = UDR1;
@@ -26,23 +41,6 @@ void uart1_init()
   UCSR1B = (1 << RXEN1) | (1 << TXEN1) | (1 << RXCIE1);
   UCSR1C = (1 << UCSZ11) | (1 << UCSZ10);
 }
-
-void relay_init(void)
-{
-
-  DDRC = 0xFF;
-  PORTC = 0xFF;
-}
-
-void relay_toggle(uint8_t status)
-{
-
-  if (status == 1)
-    PORTC = 0x01;
-  else if (status == 0)
-    PORTC = 0x00;
-}
-
 
 void uart_send_string(char *str)
 {
@@ -97,7 +95,7 @@ sendAT:
   else
     goto sendCWMODE;
 
-  _delay_ms(7000);
+  _delay_ms(10000);
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
@@ -105,43 +103,45 @@ sendAT:
   if (strstr(response_buffer, "WIFI"))
   {
     uart_send_string("AT+CIPMUX=1\r\n");
-     _delay_ms(4000);
   }
+  else
+    goto sendCIPMUX;
 
 }
 
-void Send_to_thingspeak(uint16_t Voltage, uint16_t Current, uint16_t Power)
+void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power )
 {
   char Get_string[128];
   char len_string[128];
   uint8_t len;
-  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n", API_KEY, Voltage, Current, Power);
-  len = strlen(Get_string);
-
+  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n",API_KEY,Voltage,Current,Power);
+  len=strlen(Get_string);
+  
   uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
   _delay_ms(4000);
-
-  sprintf(len_string, "AT+CIPSEND=4,%d\r\n", len);
+  
+  sprintf(len_string,"AT+CIPSEND=4,%d\r\n",len);
   uart_send_string(len_string);
-  _delay_ms(2000);
+  _delay_ms(1000);
 
-  uart_send_string(Get_string);
-  _delay_ms(4000);
+  uart_send_string(Get_string);  
+  _delay_ms(1000);
 
-  uart_send_string("AT+CIPCLOSE=5\r\n");
+  uart_send_string("AT+CIPCLOSE=5\r\n");  
   _delay_ms(4000);
   _delay_ms(4000);
   _delay_ms(4000);
   _delay_ms(2500);
+
 }
 
-char Read_from_thingspeak(void)
+
+void Read_from_thingspeak(void)
 {
   char Get_string[128];
   char len_string[128];
-  char response_buffer[50];
   uint8_t len;
-  sprintf(Get_string, "GET https://api.thingspeak.com/channels/2053966/fields/4/last.txt\r\n");
+  sprintf(Get_string, "GET https://api.thingspeak.com/channels/2053966/fields/4.json?results=1");
   len = strlen(Get_string);
 
   uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
@@ -152,58 +152,38 @@ char Read_from_thingspeak(void)
   _delay_ms(1000);
 
   uart_send_string(Get_string);
-  _delay_ms(3000);
-  strcpy(response_buffer, rx_buffer);
-  rx_index = 0;
+  _delay_ms(1000);
 
   uart_send_string("AT+CIPCLOSE=5\r\n");
-  _delay_ms(1000);
-  return response_buffer;
+  _delay_ms(4000);
 }
-
-// void wifi_connect(void)
-// {
-//   char cmd[64];
-
-//   // Construct Wi-Fi connection command with SSID and password
-//   sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
-
-//   // Send AT command
-//   uart_send_string("AT\r\n");
-//   _delay_ms(50);
-//   // uart_send_string(RESPONSE_BUFFER);
-
-//   // // Set Wi-Fi mode to station mode
-//   uart_send_string("AT+CWMODE=1\r\n");
-//   _delay_ms(50);
-
-//   // // Connect to Wi-Fi network with SSID and password
-//   uart_send_string(cmd);
-//   _delay_ms(8000);
-
-//   uart_send_string("AT+CIPMUX=1\r\n");
-//   _delay_ms(50);
-// }
 
 int main()
 {
 
-  uart1_init();
-  relay_init();
   sei();
+  uart1_init();
+
   // Connect to Wi-Fi
   wifi_connect();
+  Send_to_thingspeak(5,55,55);
 
- 
-  
-  if (Read_from_thingspeak() == '1')
-  {
-    uart_send_string("turned on");
-  }
-  else if (Read_from_thingspeak() == '0')
-  {
-    uart_send_string("turned off");
-  }
-
+  cli();
   return 0;
+
+  // char response_buffer[50];
+  //   uart_send_string("AT\r\n");
+  //   _delay_ms(500);
+  //   strcpy(response_buffer, rx_buffer);
+  //   rx_index = 0;
+
+  //   if(strstr(response_buffer,"OK"))
+  //   {
+  //       uart_send_string("Done_out");
+  //   }
+  //   else
+  //       uart_send_string("not received_out");
+
+  // memset(received_string, 0, sizeof(received_string));  buuffer clear
 }
+

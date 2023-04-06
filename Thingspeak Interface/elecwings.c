@@ -1,143 +1,138 @@
-#include <avr/io.h>
-#define F_CPU 16000000  //16MHz
-#include <avr/interrupt.h>
-#include <util/delay.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <ArduinoYaml.h>
+// Include necessary libraries
+#include <TinyGPSPlus.h>
+#include <TinyGPS++.h>
+#include <Servo.h>
 
+// Create a Servo object
+Servo myservo;
 
-#define DEFAULT_BUFFER_SIZE 160
-#define API_KEY "JGMS30H5A71UCKZ1"
-#define SSID "AndroidAP"
-#define PASSWORD "tan12345"
+// Define trigger and echo pins for ultrasonic sensor
+const int triggerPin = 11;
+const int echoPin = 10;
 
+// Declare variables for measuring distance, height, and volume
+float pulse_width, distance, height, volume;
 
-volatile char received_string[50];
-volatile uint8_t string_index = 0;
+// Create a TinyGPS++ object
+TinyGPSPlus gps;
 
+void setup() {
+  // Start serial communication with computer
+  Serial.begin(9600);
 
-;
+  // Start software serial for GPS module
+  Serial1.begin(9600);
 
-ISR(USART1_RX_vect)
-{
-    char received_char = UDR1;
-    
-    if (received_char == '\r') // End of string detected
-    {
-        received_string[string_index] = '\0'; // Add null terminator
-        string_index = 0; // Reset string index
-    }
-    else // Add character to received string
-    {
-        received_string[string_index] = received_char;
-        string_index++;
-    }
+  // Start software serial for GSM module
+  Serial2.begin(9600);
+
+  // Send AT command to check if the GSM module is working
+  Serial2.println("AT");
+  delay(1000);
+
+  // Set trigger pin as output and echo pin as input for ultrasonic sensor
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // Send AT commands to configure GSM module
+  Serial2.println("AT+CMGF=1");  // Set SMS text mode
+  delay(1000);
+  Serial2.println("AT+CNMI=2,2,0,0,0");  // Set module to automatically receive SMS
+  delay(1000);
+
+  // Print "setup" message to serial monitor
+  Serial.println("setup");
 }
 
-
-
-void uart1_init(void) {
-  // Set baud rate
-  UBRR1 = 8;
-
-  // Enable transmitter and receiver, and enable receive and transmit complete interrupts
-  UCSR1B |= (1 << TXEN1) | (1 << RXEN1) | (1 << RXCIE1) | (1 << TXCIE1);
-
-  // Set asynchronous mode, no parity, 1 stop bit, 8 data bits
-  UCSR1C = (1 << UCSZ11) | (1 << UCSZ10);
-}
-
-void uart_send_string(char* str) {
-  while (*str != '\0') {
-    // Wait for the transmit buffer to be empty
-    while (!(UCSR1A & (1 << UDRE1)))
-      ;
-
-    // Send the next character
-    UDR1 = *str;
-
-    // Move to the next character in the string
-    str++;
+void loop() {
+  // Check if there is an incoming SMS message
+  if (Serial2.available()) {
+    // Send AT commands to configure GSM module for receiving SMS
+    Serial2.println("AT+CMGF=1");  // Set SMS text mode
+    delay(1000);
+    Serial2.println("AT+CNMI=2,2,0,0,0");  // Set module to automatically receive SMS
+    pinMode(2, OUTPUT);
+    delay(1000);
   }
-}
 
+  // If there is an incoming SMS message
+  if (Serial2.available()) {
+    delay(500);
+    String message = "";
+    while (Serial2.available()) {
+      message += (char)Serial2.read();
+    }
+    // Print the message to serial monitor
+    Serial.println("SMS Received: " + message);
 
+    // If the message contains "Lock", activate the servo motor to lock the container
+    if (message.indexOf("Lock") > 0) {
+      // myservo.write(90); // rotate the servo motor to 180 degree
+      Serial.println("open");
+      digitalWrite(2, HIGH);
 
-void wifi_connect(void) {
-  char cmd[64];
+      // Send a confirmation SMS message to the sender
+      Serial2.println("AT+CMGS=\"+919140886252\"\r");  // Replace x with mobile number
+      delay(1000);
+      Serial2.println("Closed");  // The SMS text you want to send
+      delay(100);
+      Serial2.println((char)26);  // ASCII code of CTRL+Z for saying the end of sms to  the module
+      delay(1000);
+    }
 
-  // Construct Wi-Fi connection command with SSID and password
-  sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
+    if (message.indexOf("Unlock") > 0) {
+      myservo.write(0);  // rotate the servo motor to 0 degree
+      Serial.println("close");
+      digitalWrite(2, LOW);
 
-  // Send AT command
-  uart_send_string("AT\r\n");
-  _delay_ms(1000);
-  // uart_send_string(RESPONSE_BUFFER);
+      Serial2.println("AT+CMGS=\"+919398060764\"\r");  // Replace x with mobile number
+      delay(1000);
+      Serial2.println("Opened");  // The SMS text you want to send
+      delay(100);
+      Serial2.println((char)26);  // ASCII code of CTRL+Z for saying the end of sms to  the module
+      delay(1000);
+    }
+    Serial1.begin(9600);
+    // If the message contains "Gps", get GPS location and send it back as an SMS message
+    if (message.indexOf("Gps") > 0) {
+      Serial.println("connected");
+      delay(500);
+      Serial.println(Serial1.available());
+      // This sketch displays information every time a new sentence is correctly encoded.
+      while (Serial1.available() > 0) {
+        delay(500);
+        if (gps.encode(Serial1.read())) {
+          delay(500);
+          displayInfo();
+        }
+      }
+         //   // If 5000 milliseconds pass and there are no characters coming in
+    //   // over the software serial port, show a "No GPS detected" error
+      if (millis() > 100000 && gps.charsProcessed() < 10)
+      {
+        Serial.println("No GPS detected");
+        while(true);
+      }
 
-  // // Set Wi-Fi mode to station mode
-  uart_send_string("AT+CWMODE=1\r\n");
-  _delay_ms(1000);
+    }
 
-
-  // // Connect to Wi-Fi network with SSID and password
-  uart_send_string(cmd);
-  _delay_ms(10000);
-
-  uart_send_string("AT+CIPMUX=1\r\n");
-  _delay_ms(1000);
-}
-
-void Read_from_thingspeak(void) {
-  char Get_string[128];
-  char len_string[128];
-  uint8_t len;
-  sprintf(Get_string, "GET https://api.thingspeak.com/channels/2079434/fields/1.json?api_key=OWD73ANWRQ40ORA8&results=2");
-  len = strlen(Get_string);
-
-  uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
-  _delay_ms(4000);
-
-  sprintf(len_string, "AT+CIPSEND=4,%d\r\n", len);
-  uart_send_string(len_string);
-  _delay_ms(1000);
-
-  uart_send_string(Get_string);
-  _delay_ms(1000);
-
-  uart_send_string("AT+CIPCLOSE=5\r\n");
-  _delay_ms(4000);
-}
-
-
-
-int main() {
-
-  uart1_init();
-
-  // Connect to Wi-Fi
-  wifi_connect();
-
-  //memset(received_string, 0, sizeof(received_string));  buuffer clear
-  
-  while(1){
-  sei();
-  Read_from_thingspeak();
-  cli();
-  cJSON *root = cJSON_Parse(received_string);
-  cJSON *name = cJSON_GetObjectItem(root, "field4");
-  char *name_value = cJSON_GetStringValue(name);
-  cJSON_Delete(root);
-
-  uart_send_string(name_value);
-
-  
-  
-
-    
-
+    // If 5000 milliseconds pass and there are no
   }
 
 
+}
+void displayInfo() {
+  delay(5000);
+  if (gps.location.isValid()) {
+    Serial.print("Latitude: ");
+    Serial.println(gps.location.lat(), 6);
+    Serial.print("Longitude: ");
+    Serial.println(gps.location.lng(), 6);
+    Serial.print("Altitude: ");
+    Serial.println(gps.altitude.meters());
+  } else {
+    Serial.println("Location: Not Available");
+  }
+
+  delay(1000);
 }

@@ -22,19 +22,15 @@ void uart1_init();
 void relay_init(void);
 #line 37 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
 void relay_toggle(uint8_t status);
-#line 45 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-uint8_t adc_read(void);
-#line 79 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+#line 47 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
 void uart_send_string(char *str);
-#line 95 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+#line 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
 void wifi_connect(void);
-#line 145 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power );
-#line 172 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+#line 113 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+void Send_to_thingspeak(uint16_t Voltage, uint16_t Current, uint16_t Power);
+#line 138 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
 char Read_from_thingspeak(void);
-#line 224 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
-float calc_rms_voltage();
-#line 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
+#line 188 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
 int main();
 #line 17 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Thingspeak Interface\\main\\main.ino"
 ISR(USART1_RX_vect)
@@ -50,52 +46,20 @@ void uart1_init()
   UCSR1C = (1 << UCSZ11) | (1 << UCSZ10);
 }
 
-void relay_init(void){
-
-    DDRC = 0xFF; 
-    PORTC = 0xFF;
-    
-}
-
-void relay_toggle(uint8_t status){
-
-if(status==1)
-PORTC = 0x01;
-else if(status==0)
-PORTC = 0x00;
-}
-
-uint8_t adc_read(void)
+void relay_init(void)
 {
-// Select differential input mode
-ADMUX |= (1 << MUX3) | (1 << MUX2) | (1 << MUX1); // Select ADC1 (A0) as positive input
-ADCSRB |= (1 << MUX5); // Select ADC0 (A1) as negative input
 
-// Set ADC reference voltage
-ADMUX |= (1 << REFS1) | (1 << REFS0); // Use internal 5V as reference voltage
+  DDRC = 0xFF;
+  PORTC = 0xFF;
+}
 
-ADMUX |= (1 << ADLAR);    // left aligned, better for 8 bit resolution
+void relay_toggle(uint8_t status)
+{
 
-// Set ADC clock frequency
-ADCSRA |= (1 << ADPS2) | (1 << ADPS0); // Set prescaler to 32 for 5 kHz sampling frequency
-
-// Enable ADC
-ADCSRA |= (1 << ADEN);
-
-// Start ADC conversion
-ADCSRA |= (1 << ADSC);
-
-// Wait for conversion to complete
-while (ADCSRA & (1 << ADSC));
-
-// Get ADC value
-uint8_t adc_value = ADC;
-
-// Calculate differential value
-uint8_t differential_value = (uint8_t)adc_value - 512;
-
-// Return differential value
-return differential_value;
+  if (status == 1)
+    PORTC = 0x01;
+  else if (status == 0)
+    PORTC = 0x00;
 }
 
 
@@ -152,45 +116,43 @@ sendAT:
   else
     goto sendCWMODE;
 
-  _delay_ms(2000);
+  _delay_ms(7000);
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
   // Connect to Wi-Fi network with SSID and password
-  while (strstr(response_buffer, "CONNECTED"))
+  if (strstr(response_buffer, "WIFI"))
   {
     uart_send_string("AT+CIPMUX=1\r\n");
-     _delay_ms(2000);
+     _delay_ms(4000);
   }
 
 }
 
-void Send_to_thingspeak( uint16_t Voltage, uint16_t Current, uint16_t Power )
+void Send_to_thingspeak(uint16_t Voltage, uint16_t Current, uint16_t Power)
 {
   char Get_string[128];
   char len_string[128];
   uint8_t len;
-  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n",API_KEY,Voltage,Current,Power);
-  len=strlen(Get_string);
-  
+  sprintf(Get_string, "GET https://api.thingspeak.com/update?api_key=%s&field1=%d&field2=%d&field3=%d\r\n", API_KEY, Voltage, Current, Power);
+  len = strlen(Get_string);
+
   uart_send_string("AT+CIPSTART=4,\"TCP\",\"api.thingspeak.com\",80\r\n");
   _delay_ms(4000);
-  
-  sprintf(len_string,"AT+CIPSEND=4,%d\r\n",len);
+
+  sprintf(len_string, "AT+CIPSEND=4,%d\r\n", len);
   uart_send_string(len_string);
-  _delay_ms(1000);
+  _delay_ms(2000);
 
-  uart_send_string(Get_string);  
-  _delay_ms(1000);
+  uart_send_string(Get_string);
+  _delay_ms(4000);
 
-  uart_send_string("AT+CIPCLOSE=5\r\n");  
+  uart_send_string("AT+CIPCLOSE=5\r\n");
   _delay_ms(4000);
   _delay_ms(4000);
   _delay_ms(4000);
   _delay_ms(2500);
-
 }
-
 
 char Read_from_thingspeak(void)
 {
@@ -213,68 +175,55 @@ char Read_from_thingspeak(void)
   strcpy(response_buffer, rx_buffer);
   rx_index = 0;
 
-
   uart_send_string("AT+CIPCLOSE=5\r\n");
   _delay_ms(1000);
   return response_buffer;
 }
 
-void wifi_connect(void)
-{
-    char cmd[64];
+// void wifi_connect(void)
+// {
+//   char cmd[64];
 
-    // Construct Wi-Fi connection command with SSID and password
-    sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
+//   // Construct Wi-Fi connection command with SSID and password
+//   sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
 
-    // Send AT command
-    uart_send_string("AT\r\n");
-    _delay_ms(50);
-    // uart_send_string(RESPONSE_BUFFER);
+//   // Send AT command
+//   uart_send_string("AT\r\n");
+//   _delay_ms(50);
+//   // uart_send_string(RESPONSE_BUFFER);
 
-    // // Set Wi-Fi mode to station mode
-     uart_send_string("AT+CWMODE=1\r\n");
-     _delay_ms(50);
+//   // // Set Wi-Fi mode to station mode
+//   uart_send_string("AT+CWMODE=1\r\n");
+//   _delay_ms(50);
 
+//   // // Connect to Wi-Fi network with SSID and password
+//   uart_send_string(cmd);
+//   _delay_ms(8000);
 
-    // // Connect to Wi-Fi network with SSID and password
-     uart_send_string(cmd);
-     _delay_ms(8000);
-
-     uart_send_string("AT+CIPMUX=1\r\n");
-     _delay_ms(50);
-}
-
-float calc_rms_voltage()
-{
-    uint32_t sum = 0;
-    float rms_voltage = 0;
-    uint16_t adc_value;
-    for (int i = 0; i < 256; i++) {
-        adc_value = adc_read();
-        sum += adc_value * adc_value;
-        _delay_us(10);
-    }
-    rms_voltage = sqrt(sum / 256.0);
-    return rms_voltage;
-}
+//   uart_send_string("AT+CIPMUX=1\r\n");
+//   _delay_ms(50);
+// }
 
 int main()
 {
 
-  sei();
   uart1_init();
   relay_init();
-
+  sei();
   // Connect to Wi-Fi
   wifi_connect();
-  while(1){
-  //Send_to_thingspeak(calc_rms_voltage(),0,0);
-  if (Read_from_thingspeak()=='1')
-    relay_toggle(1);
-  else if (Read_from_thingspeak() == '0')
-    relay_toggle(0);
-    }
-  return 0;
 
+ 
+  
+  if (Read_from_thingspeak() == '1')
+  {
+    uart_send_string("turned on");
+  }
+  else if (Read_from_thingspeak() == '0')
+  {
+    uart_send_string("turned off");
+  }
+
+  return 0;
 }
 
