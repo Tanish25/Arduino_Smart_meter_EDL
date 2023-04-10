@@ -1,0 +1,8 @@
+#line 1 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\.vscode\\arduino.json"
+{
+    "configuration": "cpu=atmega2560",
+    "board": "arduino:avr:mega",
+    "programmer": "avrispmkii",
+    "sketch": "main.ino",
+    "port": "COM6"
+}

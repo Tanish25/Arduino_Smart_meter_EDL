@@ -23,7 +23,6 @@
    "-DARDUINO_ARCH_AVR",
    "-IC:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
    "-IC:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\mega",
-   "-IC:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries\\ThingSpeak\\src",
    "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\main.ino.cpp",
    "-o",
    "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\main.ino.cpp.o"
@@ -33,20 +32,17 @@
  {
   "directory": "c:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive",
   "arguments": [
-   "C:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7/bin/avr-g++",
+   "C:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\avr-gcc\\7.3.0-atmel3.6.1-arduino7/bin/avr-gcc",
    "-c",
    "-g",
    "-Os",
    "-w",
-   "-std=gnu++11",
-   "-fpermissive",
-   "-fno-exceptions",
+   "-std=gnu11",
    "-ffunction-sections",
    "-fdata-sections",
-   "-fno-threadsafe-statics",
-   "-Wno-error=narrowing",
    "-MMD",
    "-flto",
+   "-fno-fat-lto-objects",
    "-mmcu=atmega2560",
    "-DF_CPU=16000000L",
    "-DARDUINO=10607",
@@ -54,11 +50,10 @@
    "-DARDUINO_ARCH_AVR",
    "-IC:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\cores\\arduino",
    "-IC:\\Users\\abhin\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.6\\variants\\mega",
-   "-IC:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries\\ThingSpeak\\src",
-   "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries\\ThingSpeak\\src\\ThingSpeak.cpp",
+   "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\usart.c",
    "-o",
-   "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\libraries\\ThingSpeak\\ThingSpeak.cpp.o"
+   "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\usart.c.o"
   ],
-  "file": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries\\ThingSpeak\\src\\ThingSpeak.cpp"
+  "file": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\usart.c"
  }
 ]

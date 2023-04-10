@@ -6,44 +6,28 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <ThingSpeak.h>
+#include "usart.h"
 
 #define DEFAULT_BUFFER_SIZE 160
 #define API_KEY "JGMS30H5A71UCKZ1"
 #define SSID "Pixel-5"
 #define PASSWORD "cabhinav"
-
-volatile char rx_buffer[50];
+#define BUFF_SIZE   25
+char rx_buffer;
 volatile uint8_t rx_index = 0;
 
-#line 23 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-void uart1_init();
-#line 30 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+
+#line 18 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 void relay_init(void);
-#line 36 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+#line 24 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 void relay_toggle(uint8_t status);
-#line 45 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+#line 33 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 void uart_send_string(char *str);
-#line 61 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-void wifi_connect(void);
-#line 115 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+#line 51 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 char * Read_from_thingspeak(void);
-#line 146 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-int main();
-#line 17 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
-ISR(USART1_RX_vect)
-{
-  char received_byte = UDR1;
-  rx_buffer[rx_index++] = received_byte;
-}
-
-void uart1_init()
-{
-  UBRR1 = 8;
-  UCSR1B = (1 << RXEN1) | (1 << TXEN1) | (1 << RXCIE1);
-  UCSR1C = (1 << UCSZ11) | (1 << UCSZ10);
-}
-
+#line 82 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
+int main(void);
+#line 18 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\main.ino"
 void relay_init(void){
 
     DDRC = 0x01; 
@@ -74,58 +58,6 @@ void uart_send_string(char *str)
     str++;
   }
 }
-
-void wifi_connect(void)
-{
-  char cmd[64];
-
-  // Construct Wi-Fi connection command with SSID and password
-  sprintf(cmd, "AT+CWJAP=\"%s\",\"%s\"\r\n", SSID, PASSWORD);
-
-  char response_buffer[50];
-// Send AT to ESP
-sendAT:
-  uart_send_string("AT\r\n");
-  _delay_ms(1000);
-  strcpy(response_buffer, rx_buffer);
-  rx_index = 0;
-
-  // Set Wi-Fi mode to station mode
-  if (strstr(response_buffer, "OK"))
-  {
-  sendCWMODE:
-    uart_send_string("AT+CWMODE=1\r\n");
-  }
-  else
-    goto sendAT;
-
-  _delay_ms(500);
-  strcpy(response_buffer, rx_buffer);
-  rx_index = 0;
-
-  // Connect to Wi-Fi network with SSID and password
-  if (strstr(response_buffer, "OK"))
-  {
-  sendCIPMUX:
-    uart_send_string(cmd);
-  }
-  else
-    goto sendCWMODE;
-
-  _delay_ms(2000);
-  strcpy(response_buffer, rx_buffer);
-  rx_index = 0;
-
-  // Connect to Wi-Fi network with SSID and password
-  if (strstr(response_buffer, "WIFI"))
-  {
-    uart_send_string("AT+CIPMUX=1\r\n");
-  }
-  else
-    goto sendCIPMUX;
-
-}
-
 
 
 
@@ -160,23 +92,21 @@ char* Read_from_thingspeak(void)
 
 
 
-int main()
+int main(void)
 {
 
-  sei();
-  uart1_init();
-  relay_init();
-
-  // Connect to Wi-Fi
-  wifi_connect();
-  cli();
+	uart0_init(BAUD_CALC(115200)); 
+	uart1_init(BAUD_CALC(115200));
+	
+	stdout = &uart0_io; // attach uart stream to stdout & stdin
+	stdin = &uart0_io; // uart0_in and uart0_out are only available if NO_USART_RX or NO_USART_TX is defined
+	
+	sei(); // enable interrupts
+	char buffer;
+	uart1_puts("AT\r\n"); 
   while(1){
-  if (Read_from_thingspeak())
-    relay_toggle(1);
-  else if (Read_from_thingspeak() == '0')
-    relay_toggle(0);};
-  cli();
-  return 0;
-
+	scanf("%d", rx_buffer);
+  printf(rx_buffer); }
+	while(1);
 }
 

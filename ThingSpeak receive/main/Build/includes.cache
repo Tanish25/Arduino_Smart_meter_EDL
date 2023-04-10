@@ -11,16 +11,11 @@
   },
   {
     "Sourcefile": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\main.ino.cpp",
-    "Include": "ThingSpeak.h",
-    "Includepath": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries\\ThingSpeak\\src"
-  },
-  {
-    "Sourcefile": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\main.ino.cpp",
     "Include": "",
     "Includepath": null
   },
   {
-    "Sourcefile": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\Arduino\\libraries\\ThingSpeak\\src\\ThingSpeak.cpp",
+    "Sourcefile": "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\ThingSpeak receive\\main\\Build\\sketch\\usart.c",
     "Include": "",
     "Includepath": null
   }
