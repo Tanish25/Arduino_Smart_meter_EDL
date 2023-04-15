@@ -1,0 +1,30 @@
+AT+CIPMUX=1
+AT+CIPSTART=0,"TCP","api.thingspeak.com",80
+AT+CIPSTART=0,"TCP","184.106.153.149",80
+AT+CIPSEND=0,51   \\ including \r\n
+GET /update?api_key=46HY1EB6NJ6RPELJ&field1=0
+AT+CIPCLOSE
+
+
+AT+CIPMUX=1
+AT+CIPSTART=0,"TCP","api.thingspeak.com",80
+AT+CIPSTART=0,"TCP","184.106.153.149",80
+AT+CIPSEND=0,77  \\ including \r\n
+GET https://api.thingspeak.com/update?api_key=JGMS30H5A71UCKZ1&field1=255\r\n
+AT+CIPCLOSE
+
+
+
+Working:
+
+AT+CIPMUX=1
+AT+CIPSTART=4,"TCP","api.thingspeak.com",80
+               or
+AT+CIPSTART=4,"TCP","184.106.153.149",80
+AT+CIPSEND=4,77 
+GET https://api.thingspeak.com/update?api_key=JGMS30H5A71UCKZ1&field1=82\r\n
+AT+CIPCLOSE
+
+
+Thingspeak  read:
+https://api.thingspeak.com/channels/2053966/fields/4/last.txt

@@ -41,8 +41,9 @@ volatile uint8_t i_count = 0;
 // Energy Paramters
 volatile uint32_t Energy = 0;
 volatile uint32_t Energyi = 0;
-const uint32_t Energy_limit_Wh = 2;
-uint32_t Energy_max = Energy_limit_Wh*16000; //after conversion
+/// Set Energy limit 
+const uint32_t Energy_limit_Wh = 5;
+uint32_t Energy_max = Energy_limit_Wh*1600; //after conversion
 
 volatile uint16_t max_val_voltage = 0;
 volatile uint16_t max_val_current = 0;
@@ -59,129 +60,129 @@ volatile uint8_t relay_status;
 void adc_init()
 {
   
-# 58 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7A)) 
-# 58 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 58 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  7
-# 58 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ); // Enable the ADC
   
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7A)) 
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  2
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                       ) | (1 << 
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                 1
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                      ) | (1 << 
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                                0
-# 59 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                                     ); // 128 prescale for 16Mhz/128= 125 Khz
   
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 61 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7A)) 
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 61 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 61 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  3
-# 60 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 61 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ); // Enable Interrupts
 
   
-# 62 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x64)) 
-# 62 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
       |= (0 << 
-# 62 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                0
-# 62 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 63 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                     ); // Power Reduction Register's PRADC bit must be disabled before starting the conversion
 
   
-# 64 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 65 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7E)) 
-# 64 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 65 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        = 0xff;
   
-# 65 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 66 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7F)) 
-# 65 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 66 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        = 0xff;
 
   
-# 67 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7C)) 
-# 67 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        |= (1 << 
-# 67 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                 6
-# 67 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ); // use external AREF as the reference
   
-# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7C)) 
-# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        |= (0 << 
-# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                 7
-# 68 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ); // use external AREF as the reference
   
-# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 70 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7C)) 
-# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 70 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        |= (1 << 
-# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 70 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                 5
-# 69 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 70 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ); // left aligned, better for 8 bit resolution
 
   // Set the ADC auto trigger source to Timer/Counter1 Compare Match A
   
-# 72 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7A)) 
-# 72 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 72 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  5
-# 72 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                       );
   
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7B)) 
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         &= ~(1 << 
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                   2
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                        ) & ~(1 << 
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                   1
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                        ) & ~(1 << 
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                                   0
-# 73 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                                        );
   
-# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 75 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x7B)) 
-# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 75 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 75 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  1
-# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 75 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                       ) | (1 << 
-# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 75 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                 0
-# 74 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 75 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                      );
 }
 
@@ -191,39 +192,39 @@ void adc_init()
 void uart1_init()
 {
   
-# 82 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint16_t *)(0xCC)) 
-# 82 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        = 8;
   
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0XC9)) 
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         = (1 << 
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                 4
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ) | (1 << 
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                3
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                     ) | (1 << 
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                               7
-# 83 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                                     );
   
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 85 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0xCA)) 
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 85 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         = (1 << 
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 85 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                 2
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 85 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                       ) | (1 << 
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 85 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                 1
-# 84 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 85 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                       );
 }
 
@@ -233,14 +234,14 @@ void uart1_init()
 void relay_init(void)
 {
   
-# 92 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 93 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)((0x07) + 0x20)) 
-# 92 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 93 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
       = 0x01;
   
-# 93 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 94 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 93 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 94 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        = 0x01;
   relay_status = 1;
 }
@@ -283,21 +284,21 @@ void uart_send_string(char *str)
   {
     // Wait for the transmit buffer to be empty
     while (!(
-# 134 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 135 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
             (*(volatile uint8_t *)(0xC8)) 
-# 134 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 135 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                    & (1 << 
-# 134 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 135 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                            5
-# 134 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 135 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                 )))
       ;
 
     // Send the next character
     
-# 138 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 139 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
    (*(volatile uint8_t *)(0XCE)) 
-# 138 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 139 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         = *str;
 
     // Move to the next character in the string
@@ -395,92 +396,92 @@ void pwm_setup()
   // Set Timer/Counter1 to Fast PWM mode
 
   
-# 234 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)((0X27) + 0x20)) 
-# 234 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        = 0x7F; // 50 percent of 255=duty cycle//decimal=127
   
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)((0x24) + 0x20)) 
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  7
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                        ) | (1 << 
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                  0
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                       ) | (1 << 
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                                 1
-# 235 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 236 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                                      );
 
   // Set the prescaler to 64- 1KHz
   
-# 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)((0x25) + 0x20)) 
-# 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  0
-# 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ) | (1 << 
-# 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                1
-# 238 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                    );
   
-# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x80)) 
-# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  1
-# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                       ) | (1 << 
-# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                 0
-# 239 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                      );
   
-# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x81)) 
-# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  4
-# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                       ) | (1 << 
-# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                                 3
-# 240 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 241 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                                      );
 
   // Set the prescaler to 8
   
-# 243 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 244 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint8_t *)(0x81)) 
-# 243 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 244 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
         |= (1 << 
-# 243 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 244 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  1
-# 243 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 244 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      );
 
   // Set the TOP value to 0x3FFF
   
-# 246 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 247 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint16_t *)(0x86)) 
-# 246 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 247 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
       = 0x3FFF;
 
   // Set the duty cycle to 50%
   
-# 249 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 250 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
  (*(volatile uint16_t *)(0x88)) 
-# 249 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 250 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
        = 0x1FFF;
   // frequency:1KHz
 }
@@ -498,46 +499,46 @@ void ADC_read(void)
     if (f % 4 < 2)
     {
       
-# 265 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 266 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
      (*(volatile uint8_t *)(0x7C)) 
-# 265 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 266 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
            &= ~(1 << 
-# 265 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 266 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                      0
-# 265 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 266 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                          ); // Select ADC0 for conversion
     }
     else
     {
       
-# 269 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 270 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
      (*(volatile uint8_t *)(0x7C)) 
-# 269 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 270 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
            |= (1 << 
-# 269 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 270 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                     0
-# 269 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 270 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                         ); // Select ADC1 for conversion
     }
 
     
-# 272 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 273 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
    (*(volatile uint8_t *)(0x7A)) 
-# 272 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 273 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
           |= (1 << 
-# 272 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 273 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                    6
-# 272 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 273 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                        ); // Start conversion
 
     while (
-# 274 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 275 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
           (*(volatile uint8_t *)(0x7A)) 
-# 274 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 275 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                  & (1 << 
-# 274 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 275 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                          6
-# 274 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 275 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                              ))
       ; // Wait for conversion to complete
 
@@ -545,9 +546,9 @@ void ADC_read(void)
     {
       ADC_Value = 0;
       ADC_Value = 
-# 280 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 281 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  (*(volatile uint8_t *)(0x79))
-# 280 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 281 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ;
       ADC_Value_Sum_Voltage += ADC_Value;
       if (f % 4 == 1)
@@ -580,9 +581,9 @@ void ADC_read(void)
     {
       ADC_Value = 0;
       ADC_Value = 
-# 311 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 312 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
                  (*(volatile uint8_t *)(0x79))
-# 311 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 312 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
                      ;
       ADC_Value_Sum_Current += ADC_Value;
 
@@ -636,14 +637,14 @@ void ADC_read(void)
         {
           Overall_Sum_Power =50000;
         }
-      Energyi = (Overall_Sum_Power / 100)*4;
+      Energyi = (Overall_Sum_Power / 1000)*4;
       Energy = Energy + Energyi;
       if (Energy > Energy_max)
       {
         
-# 368 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
+# 369 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino" 3
        (*(volatile uint8_t *)((0x08) + 0x20)) 
-# 368 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+# 369 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
              = 0x00;
         relay_status = 0;
         _delay_ms(15000); // to make sure relay=0 is shown

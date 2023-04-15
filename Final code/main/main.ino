@@ -38,8 +38,9 @@ volatile uint8_t i_count = 0;
 // Energy Paramters
 volatile uint32_t Energy = 0;
 volatile uint32_t Energyi = 0;
-const uint32_t Energy_limit_Wh = 2;
-uint32_t Energy_max = Energy_limit_Wh*16000;    //after conversion
+/// Set Energy limit 
+const uint32_t Energy_limit_Wh = 5;
+uint32_t Energy_max = Energy_limit_Wh*1600;    //after conversion
 
 volatile uint16_t max_val_voltage = 0;
 volatile uint16_t max_val_current = 0;
@@ -361,7 +362,7 @@ void ADC_read(void)
         {
           Overall_Sum_Power =50000;
         }
-      Energyi = (Overall_Sum_Power / 100)*4;
+      Energyi = (Overall_Sum_Power / 1000)*4;
       Energy = Energy + Energyi;
       if (Energy > Energy_max)
       {

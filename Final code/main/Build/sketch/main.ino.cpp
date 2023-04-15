@@ -40,8 +40,9 @@ volatile uint8_t i_count = 0;
 // Energy Paramters
 volatile uint32_t Energy = 0;
 volatile uint32_t Energyi = 0;
-const uint32_t Energy_limit_Wh = 2;
-uint32_t Energy_max = Energy_limit_Wh*16000;    //after conversion
+/// Set Energy limit 
+const uint32_t Energy_limit_Wh = 5;
+uint32_t Energy_max = Energy_limit_Wh*1600;    //after conversion
 
 volatile uint16_t max_val_voltage = 0;
 volatile uint16_t max_val_current = 0;
@@ -55,27 +56,27 @@ volatile uint8_t relay_status;
 //--------------------------------------------------------------------------
 // Initialize ADC
 //--------------------------------------------------------------------------
-#line 56 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void adc_init();
-#line 80 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 81 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void uart1_init();
-#line 90 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 91 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void relay_init(void);
-#line 129 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 130 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void uart_send_string(char *str);
-#line 148 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 149 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void wifi_connect(void);
-#line 175 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 176 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void Send_to_thingspeak(uint16_t Voltaget, uint16_t Currentt, uint16_t Powert, uint16_t relay_value, uint32_t Energyt, uint16_t Vpk, uint16_t Ipk, uint32_t Pwrpk);
-#line 201 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 202 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 char Read_from_thingspeak(void);
-#line 230 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 231 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void pwm_setup();
-#line 256 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 257 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void ADC_read(void);
-#line 403 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 404 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 int main();
-#line 56 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
+#line 57 "C:\\Users\\abhin\\OneDrive - IIT Dharwad\\Documents\\GitHub\\Arduino_Smart_meter_EDL\\Final code\\main\\main.ino"
 void adc_init()
 {
   ADCSRA |= (1 << ADEN);                                // Enable the ADC
@@ -384,7 +385,7 @@ void ADC_read(void)
         {
           Overall_Sum_Power =50000;
         }
-      Energyi = (Overall_Sum_Power / 100)*4;
+      Energyi = (Overall_Sum_Power / 1000)*4;
       Energy = Energy + Energyi;
       if (Energy > Energy_max)
       {
